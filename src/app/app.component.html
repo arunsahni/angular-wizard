@@ -1,0 +1,72 @@
+<div class="container">
+  <section class="demo">
+    <h1>
+      Demo
+    </h1>
+    <hr/>
+    <div style="height: 350px;">
+    <form-wizard (onStepChanged)="onStepChanged($event)">
+      <wizard-step [title]="'Customers'" [isValid]="emailForm.form.valid" (onNext)="onStep1Next($event)">
+        <h4>Add Customer</h4>
+        <form #emailForm="ngForm" (ngSubmit)="saveCustomer(customer)">
+          <div class="form-group">
+            <label for="exampleInputEmail1">Email</label>
+            <input type="email" class="form-control" id="exampleInputEmail1" name="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email"
+              [(ngModel)]="customer.email" required pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$">
+
+            <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>
+           <button class="btn btn-primary btn-sm">Save</button>
+          </div>
+        </form>
+        <h4>Customers</h4>
+        <ul>  
+          <li *ngFor="let customer of customers; let i = index" [attr.data-index]="i">
+          <input type="checkbox" class="form-check-input" name="secret" [(ngModel)]="campCustomer[i]" (ngModelChange)="saveCampaignCustomer(customer)"/>
+          {{ customer.email }} 
+          </li>
+        </ul>
+      </wizard-step>
+      <wizard-step [title]="'Campaign'" [isValid]="campaignForm.form.valid" [showNext]="step2.showNext" [showPrev]="step2.showPrev" (onNext)="onStep2Next($event)">
+        <h4>Add Campaign For Email ID's:</h4><br>
+        <form #campaignForm="ngForm" (ngSubmit)="saveCampaign(campaign)">
+          <div class="form-group">
+            <label for="campname">Name:</label>
+            <input type="text" class="form-control" id="campname" name="campname" placeholder="Enter name"
+              [(ngModel)]="campaign.name" required>
+          </div>
+          <div class="form-group">
+            <label for="campUrl">Campaign Url:</label>
+            <input type="text" class="form-control" id="campUrl" name="campUrl" placeholder="Enter url"
+              [(ngModel)]="campaign.campaignUrl" required>
+          </div>
+          <button class="btn btn-primary btn-sm">Add Campaign</button>
+        </form>
+      </wizard-step>
+      <wizard-step [title]="'Upload-Template'" (onNext)="onStep3Next($event)">
+        <h1>Upload Template</h1>
+        <div>
+         <input type="file" (change)="selectFile($event)">
+        </div>
+      </wizard-step>
+     <wizard-step [title]="'Send-Email'" (onComplete)="onComplete($event)">
+        <div [ngSwitch]="isCompleted">
+          <div *ngSwitchDefault>
+            <h1>Send-Email</h1>
+            <div class="row">
+             <div class="col-sm-5">
+
+             </div>
+             <div class="col-sm-2">
+               <button class="btn btn-success btn-lg" (click) = "sendmail()">Send Mail</button>
+             </div>
+           </div>
+          </div>
+          <div *ngSwitchCase="true">
+            <h4>Thank you {{data.email}}! You have completed all the steps.</h4>
+          </div>
+        </div>
+      </wizard-step>
+    </form-wizard>
+    </div>
+  </section>
+</div>
